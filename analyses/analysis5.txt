@@ -1,0 +1,101 @@
+
+### Review of Key Aspects
+
+---
+
+#### 1. Event Listeners in `popup.693339d6.js`
+- **Key Observations**:
+  - The file contains several event listeners:
+    - `.addEventListener("click", e, !1)`
+    - `.addEventListener("keypress", e, !1)`
+    - `.addEventListener("visibilitychange", ()`
+  - These listeners handle **click events**, **keypress**, and **visibility changes**.
+  - **Implication**: The extension listens for various user interactions. We should check if any of these listeners are tied to the **"Start Export" button** or other relevant UI components.
+  
+#### **Next Steps**:
+- Ensure that **"Start Export"** or similar actions trigger the extraction of follower data and display the results correctly.
+
+---
+
+#### 2. Settings or User Preferences in `options.ceb2194a.js`
+- **Key Observations**:
+  - The file contains **object declarations** for various settings (e.g., `e`, `Ku`, `tc`).
+  - **Implication**: These may represent user preferences or configuration settings, possibly related to **export options** or **UI display**.
+  
+#### **Next Steps**:
+- **Inspect** these settings to check if they are related to:
+  - **Export format** (CSV, JSON).
+  - **Filtering options** (e.g., filtering followers based on certain criteria).
+  - **UI preferences** (e.g., dark mode, display options).
+
+---
+
+#### 3. CSS Variables in `__uno.5e800f30.css`
+- **Key Observations**:
+  - The file defines various **CSS variables** for:
+    - Colors (e.g., `--el-color-white`, `--el-color-primary-rgb`).
+    - Font sizes (e.g., `--el-font-size-large`).
+  - **Implication**: These CSS variables control the **UI styling**.
+  
+#### **Next Steps**:
+- Verify if the CSS styles are tightly coupled with specific **UI libraries** or **external frameworks**.
+  - Ensure that these styles are compatible with our redesigned UI.
+  - Remove any dependencies on external styles if necessary.
+
+---
+
+### **Next Steps**
+1. **Check the settings in `options.ceb2194a.js`** for **export-related options** and **filtering logic**.
+2. **Confirm the role of event listeners** in `popup.693339d6.js` and ensure they interact with the core functionality (i.e., follower extraction).
+3. **Ensure the styling in `__uno.5e800f30.css`** is flexible enough and not tied to external frameworks.
+
+Let me know if you’d like to focus on any specific area or move forward with code modifications! 🚀
+
+1. Export-related Options in options.ceb2194a.js
+
+    No export or filtering logic was found directly in the settings file.
+    Implication: It's possible that the export functionality is handled elsewhere, perhaps directly in the content script (index.global.js) or through UI interactions.
+
+2. "Start Export" Event Listeners in popup.693339d6.js
+
+    No explicit event listeners tied to a "Start Export" button were found in the popup.js file.
+    Implication: This might suggest that the event listener is either:
+        Handled dynamically or indirectly.
+        Possibly located elsewhere in the extension.
+
+3. External Frameworks in __uno.5e800f30.css
+
+    No external CSS imports were found in the CSS file.
+    Implication: The CSS is self-contained and does not rely on external frameworks, so it should be flexible enough for any redesign.
+
+Next Steps
+
+    Investigate other files for the export logic (especially in index.global.js or popup.js).
+    Search for the "Start Export" button event listener elsewhere or ensure the functionality is tied correctly to the extraction process.
+
+To investigate the export logic and the "Start Export" event listener, I'll do the following:
+1. Investigate index.global.js for Export Logic
+
+    I'll search within index.global.js for:
+        Functions or event listeners related to exporting followers.
+        Export data methods (e.g., CSV, JSON, or direct download).
+
+2. Check for the "Start Export" Event Listener
+
+    I'll look through any other scripts that may contain event listeners tied to the "Start Export" button.
+        This could be in popup.js or other parts of the extension if the popup doesn't directly handle it.
+
+I'll start searching now
+
+It appears that there were no matches for export logic or the "Start Export" event listener in the files we've searched so far.
+What This Means:
+
+    No explicit export logic is present in index.global.js related to CSV, JSON, or other file formats.
+    No direct event listener for the "Start Export" button was found in popup.js.
+
+Next Steps:
+
+    Review other possible locations:
+        The export logic might be in another part of the code, such as a separate file or hidden behind another module.
+        We should also confirm if the popup button triggers some other function that handles export.
+    Check the core functionality in index.mjs or other files that might directly interact with the popup or the follower extraction process.

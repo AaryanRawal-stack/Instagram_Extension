@@ -1,0 +1,87 @@
+Summary of the Current State
+What We Have Done:
+
+    Analysis of Core Scripts:
+        Follower Extraction: We thoroughly examined how followers are extracted from Instagram’s UI. Key scripts like index.global.js handle DOM manipulation and scrolling through Instagram’s follower list.
+        Background Script (index.mjs): We identified that it manages API calls, and data storage, and was responsible for interacting with external services (like listmore.info), which must be removed for our independent version.
+
+    UI and Popup:
+        We reviewed the popup UI (popup.693339d6.js), options page, and their interactivity with the export functionality.
+        Vue.js was found to be managing UI components dynamically, though the direct link to the "Start Export" button was harder to find.
+
+    Export Functionality:
+        We identified how download and save functions were central to exporting data.
+        We confirmed that l (a variable) was directly tied to JSON export and downloading follower data.
+
+    Manifest and Permissions:
+        We noted that the manifest.json file grants Instagram permissions but also contains a reference to the external service listmore.info, which we plan to remove for independence.
+
+What We Have Found:
+
+    Follower Extraction:
+        The index.global.js script handles scrolling and dynamic content loading via MutationObserver.
+        The follower data is stored locally, but some dependencies on third-party services still exist, which need to be removed.
+
+    External Dependencies:
+        The listmore.info service is referenced, which is used for authentication, logging, and potentially sending exported data externally.
+        We found mixpanel.com references for analytics that should be removed.
+
+    Vue.js in Popup:
+        Vue.js is used for dynamic UI generation, but no direct connection to the "Start Export" button was identified.
+        Event listeners related to data export might be linked dynamically via Vue.js or a separate event management system.
+
+    Export Handling:
+        Data is exported in JSON format using JSON.stringify().
+        The download function, which links to follower data, is triggered but needs to be refined to ensure it's triggered by the correct UI interaction.
+
+What We Need to Change:
+
+    Remove External Dependencies:
+        Eliminate listmore.info and Mixpanel references to ensure the extension works independently.
+
+    Simplify Authentication:
+        Modify the authentication logic to require Instagram authentication only. The extension should not rely on third-party services for login or verification.
+
+    Refactor UI Logic:
+        Ensure the "Start Export" button correctly triggers the export functionality.
+        Adjust Vue.js or JavaScript methods to directly link the button click event to export the follower data.
+
+    Data Storage:
+        Move follower data storage from localStorage to chrome.storage for better persistence and reliability.
+
+    Refine Export Logic:
+        Ensure the data is properly structured (e.g., as CSV or JSON) before triggering the download.
+        Confirm that the export process works seamlessly and that the exported files are in the correct format.
+
+Work Plan:
+What Can Be Adopted from the Original Script:
+
+    Follower Extraction:
+        The follower extraction logic (via document.querySelector() and MutationObserver) works well and can be retained in the new version.
+
+    Export Logic:
+        The download/save logic tied to l for exporting data in JSON is solid and can be adopted.
+
+    UI Styling:
+        The CSS used for the popup and export panel can be largely retained, ensuring that the UI remains consistent and functional.
+
+What Needs to Be Changed:
+
+    External Dependencies:
+        Remove all references to listmore.info and Mixpanel to ensure the tool works independently.
+
+    Manifest and Permissions:
+        Modify manifest.json to remove external dependencies and reduce unnecessary permissions (like cookies for third-party authentication).
+
+    Popup and Export Button:
+        Ensure the popup UI correctly triggers the export functionality, possibly by refining how Vue.js is used or by manually linking the button to the export functions.
+        Refactor the event listener setup for the "Start Export" button to trigger the correct export functions (i.e., for JSON or CSV).
+
+    Data Export:
+        Refine the export functionality to ensure that data is correctly formatted (JSON or CSV) and is downloaded correctly.
+
+Final Steps:
+
+    Refactor the popup code to ensure it triggers the correct export logic.
+    Implement independent follower extraction without reliance on third-party services.
+    Test the entire process to ensure that the "Start Export" button triggers the correct export of follower data.

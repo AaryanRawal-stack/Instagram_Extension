@@ -1,0 +1,95 @@
+
+### Analysis of Manifest, Popup UI, and JavaScript Behavior
+
+This analysis consolidates the findings from:
+1. **manifest.json** (Permissions, Content Scripts, and Background Behavior)
+2. **index.html (Popup UI)** (How the popup interacts with the extension)
+3. **popup.js (Popup JavaScript Behavior)** (How user interactions are handled)
+
+---
+
+## 1. Findings from `manifest.json`
+📌 **Key Observations:**
+- The extension is structured as follows:
+  - **Popup**: `"default_popup": "./dist/popup/index.html"`
+  - **Background Script**: `"service_worker": "./dist/background/index.mjs"`
+  - **Content Script**: Injects `dist/exportPanel/index.global.js` into Instagram.
+- **External Dependency:**
+  - `"host_permissions": ["*://*.instagram.com/*", "*://*.listmore.info/*"]`
+  - **Issue**: `listmore.info` is still present! This should be removed for a fully independent version.
+- **Permissions Granted:**
+  - `"storage"` (Likely used to store follower data)
+  - `"activeTab"` (Interacts with the currently opened Instagram page)
+  - `"cookies"` (Might be used for login/session handling)
+  - `"unlimitedStorage"` (Stores large amounts of data)
+
+📌 **Implications:**
+✅ **What We Should Keep:**  
+- `storage`, `activeTab` (Necessary for functionality)  
+
+❌ **What We Should Remove:**  
+- `listmore.info` (External dependency)
+- Possibly `cookies` (If it's only needed for authentication) (NO WE WANT TO KEEP COOKIES -- AUTHENTICATION FOR INSTAGRAM IS IMPORTANT FOR THE TOOL TO WORK)
+
+---
+
+## 2. Findings from `popup/index.html` (Popup UI)
+📌 **Key Observations:**
+- The HTML **does not contain direct UI elements** (like buttons or text fields).
+- Instead, it loads:
+  ```html
+  <script type="module" crossorigin src="/dist/assets/popup.693339d6.js"></script>
+  ```
+  - This means **all UI elements are likely rendered dynamically** through JavaScript.
+
+- **CSS & Styling:**
+  - The popup loads multiple stylesheets:
+    ```html
+    <link rel="stylesheet" href="/dist/assets/__uno.5e800f30.css">
+    <link rel="stylesheet" href="/dist/assets/index.eecd8b5a.css">
+    ```
+  - These likely control the popup’s appearance.
+
+📌 **Implications:**
+- The **popup UI is dynamically generated**, meaning we must check `popup.js` for:
+  - UI elements (buttons, text fields)
+  - Event listeners (e.g., "Start Export" button click)
+
+---
+
+## 3. Findings from `popup.js` (Popup JavaScript)
+📌 **Key Observations:**
+- **Modular Imports**:  
+  - The script heavily imports functions from `__uno.bbc33e34.js`, indicating **modular UI rendering**.
+- **Potential UI Handling Logic:**
+  - Uses `Symbol("tabsRootContextKey")` → Likely part of a **Vue.js or modular UI framework**.
+  - Dynamically creates tabs or interface elements.
+
+📌 **Implications:**
+- **If this uses Vue.js or another framework, we need to verify where user actions (button clicks, etc.) are processed.**
+- **We need to identify if the popup includes login validation.**
+  - If authentication logic is here, we must remove it.
+
+---
+
+## Final Recommendations Before Generating Code
+### 1. Clean Up `manifest.json`
+- **Remove `listmore.info`** to eliminate third-party dependency.
+- **Decide if we need `cookies`** (Only keep it if login/session tracking is needed).
+
+### 2. Modify `popup.js`
+- **Find UI event handlers** (e.g., "Start Export" button).
+- **Ensure no login/authentication dependencies exist**.
+- **Modify it to directly trigger follower extraction.**
+
+### 3. Simplify `popup/index.html`
+- Convert the popup into a **basic static UI** (if necessary).
+- Remove excess scripts that may load unnecessary components.
+
+---
+
+### Next Steps
+1. **Remove external dependencies (`listmore.info`, unnecessary permissions) from `manifest.json`.**
+2. **Isolate event handlers in `popup.js`** (Find "Start Export" button and ensure it correctly interacts with the content script).
+3. **Redesign the popup UI** for simplicity.
+

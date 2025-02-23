@@ -1,0 +1,45 @@
+
+### Analysis of the Instagram Follower Export Extension Code
+
+## 1. Overview of `index.global.js`
+- This script is likely responsible for **extracting followers from Instagram’s UI**.
+- It interacts with the page's DOM and listens for changes (e.g., when more followers load).
+- It includes a **browser extension API check**, meaning it will only run inside an extension.
+- There's an **error check** to ensure it's only running in an appropriate context.
+
+### Key Observations
+- The script references `chrome.runtime`, confirming that it **communicates with the background script**.
+- It might use **event listeners** to detect when the user opens the followers list.
+- It could be using JavaScript's `querySelector` or `MutationObserver` to monitor changes to the followers' modal.
+- Possible **scrolling function** to load more followers dynamically.
+
+---
+
+## 2. Overview of `index.mjs`
+- This is the **background script** responsible for handling **extension-wide logic**.
+- It **includes a polyfill** (`webextension-polyfill`), meaning it is designed to work across Chrome, Firefox, and possibly other browsers.
+- The script likely facilitates:
+  - Communication between content scripts and popup.
+  - Data storage (e.g., saving exported followers).
+  - External API calls (if any).
+  
+### Key Observations
+- **CommonJS and ES module handling**: The script imports/export functions in a modular way.
+- **Possible External Authentication**:
+  - I will search for references to external URLs (`listmore.info` or other API endpoints).
+  - If present, these will need to be removed or replaced for our independent version.
+
+---
+
+## Next Steps
+### 1. Extract Functional Code
+- I will search for:
+  - **Follower extraction logic** in `index.global.js`.
+  - **API calls or authentication** in `index.mjs`.
+
+### 2. Identify What to Modify
+- Remove **third-party authentication** (if found).
+- Retain **follower extraction functions**.
+- Ensure **direct access to Instagram’s DOM** for scraping.
+
+---

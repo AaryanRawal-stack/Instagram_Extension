@@ -1,0 +1,123 @@
+Duplicating the Instagram Follower Export & Analysis Extension
+1. Purpose of Duplication
+
+The goal is to create a personal version of the Instagram Follower Export & Analysis extension. The new version will:
+
+    Retain the functionality of scraping and exporting Instagram followers.
+    Remove any external login requirements and dependencies on third-party services.
+    Eliminate any paywall or restrictions present in the original extension.
+
+2. How the Current Extension Works
+Overview
+
+The existing extension is a Chrome extension that enables users to export followers, following lists, comments, tags, and locations from Instagram. It integrates with a backend service (potentially requiring authentication) and has an export panel for displaying and processing data.
+File Structure & Components
+
+The current extension is structured as follows:
+4.7.4_0
+│── _metadata               # Metadata for the extension verification
+│   ├── computed_hashes.json  
+│   ├── verified_contents.json  
+│── assets                  # Icons, images, and other assets  
+│   ├── Various SVG and PNG files  
+│── dist                    # Main application logic and UI  
+│   ├── assets              # CSS and JS files for styling  
+│   ├── background          # Background script (`index.mjs`)  
+│   ├── exportPanel         # JavaScript for the export panel  
+│   ├── options             # Settings page (`index.html`)  
+│   ├── popup               # Extension popup (`index.html`)  
+│── manifest.json           # Extension manifest file  
+
+Functionality & Flow
+
+    The background script (background/index.mjs) runs persistent logic, likely handling API requests and background tasks.
+    The content script (exportPanel/index.global.js) interacts with Instagram pages, extracting follower data and passing it to the extension.
+    The popup (popup/index.html) is the user interface where users initiate exports or configure settings.
+    The options page (options/index.html) provides additional settings for users.
+    The extension requires permission to interact with Instagram (*://*.instagram.com/*) and possibly an external service (listmore.info).
+
+3. The Proposed Structure of IG_FOllower_Export
+IG_Follower_Export
+│── assets                  # Icons, images, and styling
+│   ├── icon-128.png        # Icon for extension (128x128)
+│   ├── icon-48.png         # Icon for extension (48x48)
+│   ├── icon-16.png         # Icon for extension (16x16)
+│── src                     # Main scripts and logic
+│   ├── background.js       # Handles background tasks (e.g., listening for events)
+│   ├── content.js          # Extracts Instagram follower data
+│   ├── popup.js            # Handles user interactions (e.g., Start Export button)
+│── views                   # HTML interfaces
+│   ├── popup.html          # User interface for starting exports (popup)
+│   ├── options.html        # Configuration settings for users
+│── manifest.json           # Extension manifest (configuration file for the extension)
+
+
+Explanation of the Structure:
+
+    assets/:
+        Icons and images for the extension. The three icon sizes will ensure compatibility across different screens and platforms.
+
+    src/:
+        Main scripts for the functionality of the tool:
+            background.js: Handles background tasks such as initiating the follower extraction process or interacting with APIs if necessary. This file also listens for events and could be used to manage the logic of storing follower data.
+            content.js: Extracts the follower data directly from the Instagram page. It interacts with Instagram’s UI to scrape follower details and passes the data to other parts of the tool for processing.
+            popup.js: Manages user interactions, specifically triggering the "Start Export" functionality. This file can handle UI elements, such as buttons or progress indicators, and interface with background.js or content.js to start and stop the extraction and export process.
+
+    views/:
+        HTML files for the user interface:
+            popup.html: The main popup interface where users will start the export process. This page will include the UI elements, such as a "Start Export" button.
+            options.html: If applicable, users can configure settings related to the export process (e.g., export format, follower filters). This file provides settings page functionality.
+
+    manifest.json:
+        Configuration for the extension. It defines the extension’s permissions, background scripts, content scripts, and UI elements. We will modify this to ensure:
+            Permissions for Instagram and background access to perform tasks.
+            Removal of external dependencies and third-party services.
+            Ensuring no login requirements or paywall restrictions.
+
+What Can Be Adopted from the Original Script:
+
+    Follower Extraction Logic:
+        The DOM manipulation using document.querySelector() and scrolling using MutationObserver are solid and can be adopted directly for extracting followers from Instagram.
+
+    Export Logic:
+        JSON export logic using JSON.stringify() can be adopted as is, ensuring that the follower data is saved correctly in JSON format.
+
+    Popup UI & Styling:
+        The existing popup layout and styling can be retained with minor adjustments to remove external dependencies and ensure proper user interaction.
+
+What Needs to Be Changed from the Original Script:
+
+    External Dependencies:
+        Remove references to listmore.info or any third-party services. The new version will not rely on external services for authentication, storage, or data logging.
+
+    Manifest & Permissions:
+        The manifest.json needs to be cleaned up by removing unnecessary permissions, such as cookies or third-party domains. We will only need permissions for Instagram and background tasks.
+
+    Simplified Background and UI Flow:
+        Remove the complex error handling and advanced features that depend on external services.
+        The background script should focus on running tasks related to follower extraction and managing storage.
+        The popup and options page should simplify the process and only include features directly related to follower extraction and exporting.
+
+    Export Format:
+        Ensure that the data export process supports JSON (and possibly CSV if needed) in a simple and straightforward manner.
+        Make sure the "Start Export" button is properly linked to the export logic.
+
+Final Steps:
+
+    Update the Manifest:
+        Remove references to third-party services.
+        Ensure proper permissions for Instagram and background tasks.
+
+    Refactor the Popup UI:
+        Ensure that Vue.js integration or dynamic event handlers are properly set up to trigger the export process.
+
+    Finalize the Export Functionality:
+        Ensure that follower data is extracted, formatted, and saved as a JSON or CSV file when the "Start Export" button is clicked.
+
+Changes in Functionality
+
+    No External Login: The new version will directly extract Instagram followers without requiring third-party authentication.
+    No Paywall: Full functionality will be available to users.
+    Simplified Codebase: The duplicated version will remove unnecessary scripts, focusing solely on follower extraction.
+
+This structure keeps the extension lightweight while maintaining essential functionality.

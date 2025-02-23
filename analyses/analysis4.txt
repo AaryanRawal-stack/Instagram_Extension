@@ -1,0 +1,89 @@
+
+### Analysis of `index.mjs` and `index.global.js`
+This analysis focuses on **API calls, data storage, and authentication handling**.
+
+---
+
+## 1. Key Issues in `index.mjs` (Background Script)
+### ✅ API Calls Found:
+- **External URLs:**
+  ```plaintext
+  https://insfo.listmore.info
+  https://github.com/uuidjs/uuid
+  https://www.youtube.com/watch?v=QotwABRip24
+  ```
+  - **Issue**: `insfo.listmore.info` is still referenced, meaning the extension likely **sends data externally**.
+  - **Solution**: Remove all dependencies on `listmore.info` to make the extension fully independent.
+
+### ✅ Authentication Triggers:
+- **Keywords found:** `"token"`, `"listmore.info"`
+  - **Issue**: The extension **checks for authentication tokens**, possibly enforcing login before allowing exports.
+  - **Solution**: We need to **bypass this check** so that authentication is only required for Instagram access (not external services).
+
+### ❌ No Evidence of Storage Handling
+- There were **no matches for `chrome.storage` or `localStorage`**.
+  - **Implication**: This script may **not** be responsible for storing extracted data.
+  - **Next Steps**: We should check **other files** for where extracted followers are stored.
+
+---
+
+## 2. Key Issues in `index.global.js` (Export & UI Logic)
+### ✅ API Calls Found:
+- **Instagram API Calls:**
+  ```plaintext
+  https://www.instagram.com/graphql/query
+  https://www.instagram.com/api/v1
+  https://www.instagram.com/api/v1/web
+  ```
+  - **Issue**: The extension may rely on **Instagram's private API**.
+  - **Solution**: Ensure the code **does not violate Instagram's terms of service**.
+
+- **External Services (to be removed):**
+  ```plaintext
+  https://insfo.listmore.info
+  https://mixpanel.com (analytics tracking)
+  ```
+  - **Issue**: `listmore.info` is referenced, likely sending exported data externally.
+  - **Solution**: Remove all references to external services.
+
+### ✅ Authentication Checks Found:
+- **Keywords:** `"token"`, `"login"`, `"auth"`
+  - **Issue**: The script **checks if the user is logged in** before allowing exports.
+  - **Solution**: Modify the script to **only require Instagram authentication**, not third-party authentication.
+
+### ✅ Storage Handling Found:
+- **Local Storage Detected:**
+  ```plaintext
+  localStorage.s
+  localStorage.e
+  localStorage.r
+  localStorage.i
+  localStorage.g
+  ```
+  - **Implication**: The script **stores data locally in the browser**.
+  - **Next Steps**: We should confirm:
+    - **What data is stored?** (Follower lists? API responses?)
+    - **Can we replace it with `chrome.storage` for persistence?**
+
+---
+
+## Final Recommendations
+### **1. Remove External Dependencies**
+- **Eliminate `listmore.info` references** in both scripts.
+- **Disable Mixpanel (`mixpanel.com`) analytics tracking.**
+
+### **2. Bypass Third-Party Authentication**
+- Modify `index.mjs` and `index.global.js` so that the extension **only requires Instagram authentication**.
+
+### **3. Verify Instagram API Usage**
+- Ensure the extension **does not violate Instagram's terms** by using unauthorized API requests.
+
+### **4. Improve Data Storage**
+- **Replace `localStorage` with `chrome.storage`** if data persistence is needed.
+
+---
+
+### Next Steps
+Would you like to:
+1. **Proceed with removing external dependencies (`listmore.info`, `mixpanel.com`)?**
+2. **Further analyze how follower data is stored before modifying storage behavior?** 🚀

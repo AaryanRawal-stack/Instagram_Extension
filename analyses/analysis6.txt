@@ -1,0 +1,26 @@
+1. options/index.html
+
+    Key Observations:
+        It includes a script for handling the options page:
+
+        <script type="module" crossorigin src="/dist/assets/options.ceb2194a.js"></script>
+
+        It references __uno.bbc33e34.js and __uno.5e800f30.css, which are the modular script and styling files we've already seen in previous analyses.
+        This file serves as the options/settings page for the extension.
+
+    Next Step:
+        We should check options.ceb2194a.js to ensure that it handles any user settings related to follower extraction (e.g., filtering, export options).
+
+2. popup/index.html
+
+    Key Observations:
+        It includes a script for handling the popup UI:
+
+    <script type="module" crossorigin src="/dist/assets/popup.693339d6.js"></script>
+
+    It also references __uno.bbc33e34.js and __uno.5e800f30.css, which we've seen before.
+    This file serves as the popup interface for user interaction.
+
+Next Step:
+
+    We should confirm that the popup.693339d6.js file properly connects the popup UI to the extraction functionality (e.g., triggering the "Start Export" process).

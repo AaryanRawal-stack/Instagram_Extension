@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "Instagram Follower Export Tool",
+  "description": "Export and analyze Instagram followers and following lists",
+  "version": "1.0.0",
+  "action": {
+    "default_icon": {
+      "16": "assets/icon-16.png",
+      "48": "assets/icon-48.png",
+      "128": "assets/icon-128.png"
+    },
+    "default_popup": "views/popup.html"
+  },
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.instagram.com/*"],
+      "js": ["src/content.js"]
+    }
+  ],
+  "host_permissions": [
+    "*://*.instagram.com/*"
+  ],
+  "permissions": [
+    "storage",
+    "activeTab",
+    "cookies",
+    "unlimitedStorage"
+  ],
+  "icons": {
+    "16": "assets/icon-16.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  },
+  "options_ui": {
+    "page": "views/options.html",
+    "open_in_tab": true
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/*"],
+      "matches": ["*://*.instagram.com/*"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
